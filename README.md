@@ -337,6 +337,44 @@ Benefits:
 
 ---
 
+# Testing
+
+Run the full test suite (unit, API, and integration tests):
+
+```bash
+.\mvnw.cmd verify
+```
+
+On Linux/macOS:
+
+```bash
+./mvnw verify
+```
+
+Tests use an in-memory H2 database and embedded Kafka via the `test` profile, so **Docker is not required** to run tests. No external PostgreSQL or Kafka instance needs to be running.
+
+## Test coverage
+
+| Test class | Scope |
+|---|---|
+| `PaymentProcessorServiceTest` | Business rules (amount limits, same-account transfer) |
+| `PaymentEventProducerTest` | Kafka topic routing for completed/failed payments |
+| `PaymentControllerTest` | REST API contract (201, 400, 404, 409) |
+| `PaymentServiceIntegrationTest` | End-to-end create flow with DB persistence and Kafka events |
+| `PaymenthubApplicationTests` | Spring context smoke test |
+
+Run a single test class:
+
+```bash
+.\mvnw.cmd test -Dtest=PaymentProcessorServiceTest
+```
+
+## CI
+
+GitHub Actions runs `./mvnw verify` on every push and pull request to `main`/`master`. See `.github/workflows/ci.yml`.
+
+---
+
 # Planned AWS Deployment
 
 ## Deployment Architecture
@@ -367,7 +405,6 @@ Potential enhancements:
 - authentication / authorization
 - multi-service decomposition
 - Amazon MSK integration
-- CI/CD pipeline
 
 ---
 
